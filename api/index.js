@@ -40,7 +40,10 @@ app.post('/login', async (req, res) => {
     if (passOk){
         jwt.sign({username, id:userDoc._id}, secret, {}, (err, token) => {
             if (err) throw err;
-            res.cookie('token', token).json('ok'); 
+            res.cookie('token', token).json({
+              id:userDoc._id,
+              username,
+            }); 
         });
         
     } else {
@@ -53,8 +56,11 @@ app.get('/profile', (req,res) => {
   jwt.verify(token, secret, {}, (err,info) => {
     if (err) throw err;
     res.json(info);
-  });
-    
+  });    
+});
+
+app.post('/logout', (req,res) => {
+res.cookie('token', '').json('ok');
 });
 
 app.listen(port, () => {
