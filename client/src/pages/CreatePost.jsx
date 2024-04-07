@@ -13,13 +13,12 @@ const modules = {
         ],
 }
 
-
 function CreatePost(){
     const[title,setTitle] = useState('')
     const[summary,setSummary] = useState('')
     const [content,setContent] = useState('')
     const [files,setFiles] = useState('')
-
+    const [redirect,setRedirect] = useState(false)
 
     async function createNewPost(e){
         const data = new FormData()
@@ -31,10 +30,15 @@ function CreatePost(){
        const response = await fetch('http://localhost:4000/post', {
         method: 'POST',
         body: data,
+        credentials: 'include',
        }) 
+       if (response.ok){
+        setRedirect(true);
+       }
     }
-
-
+if (redirect) {
+    window.location.href = '/';
+}
     return(
         <form onSubmit={createNewPost}>
             <input type='title' placeholder={'title'} value={title} onChange={e => setTitle(e.target.value)} />
