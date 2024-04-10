@@ -41,7 +41,6 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const userDoc = await User.findOne({ username });
   const passOk = bcrypt.compareSync(password, userDoc.password);
-
   if (passOk) {
     jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
       if (err) throw err;
@@ -52,7 +51,7 @@ app.post("/login", async (req, res) => {
     });
   } else {
     res.status(400).json("Wrong credentials");
-  }
+  } 
 });
 
 app.get("/profile", (req, res) => {
@@ -106,7 +105,7 @@ app.put("/post",uploadMiddleware.single("file"), async (req, res) => {
     if (err) throw err;
     const { id, title, summary, content } = req.body;
     const postDoc = await Post.findById(id);
-    console.log(postDoc,"postdoc")
+    // console.log(postDoc,"postdoc")
     const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
     if (!isAuthor) {
       return res.status(400).json('You are not the authorized to update the post'); 
@@ -139,4 +138,6 @@ app.get("/post/:id", async (req, res) => {
 app.listen(port, () => {
   console.log("App is running");
 });
+
+
 
